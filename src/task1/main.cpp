@@ -16,6 +16,8 @@ struct word_count
     size_t count;
 };
 
+vector<string> ignore_words = {"in", "at", "the", "an", "for", "to", "on", "was", "were"};
+
 int main(int argc, char** argv) {
     ifstream file(filename);
     if(!file) {
@@ -47,11 +49,14 @@ while_not_eof:
 while_not_end_iterator:
     if(i != sregex_iterator()) {
         string word = i->str();
-        if(words.find(word) != words.end()) {
-            // found
-            words[word]++;
-        } else {
-            words[word] = 1;
+        //if(/*word does not exist in ignore arr*/)
+        if(std::find(ignore_words.begin(), ignore_words.end(), word) == ignore_words.end()) {
+            if(words.find(word) != words.end()) {
+                // found
+                words[word]++;
+            } else {
+                words[word] = 1;
+            }
         }
         i++;
         goto while_not_end_iterator;

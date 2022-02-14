@@ -21,6 +21,8 @@ typedef string page;
 typedef vector<string> words_page;
 typedef vector<words_page> book; // it contains all the pages that contains words
 
+vector<string> ignore_words = {"in", "at", "the", "an", "for", "to", "on", "was", "were"};
+
 int main(int argc, char** argv) {
     ifstream file(filename);
     if(!file) {
@@ -63,12 +65,15 @@ before_loop1:
     if(pages_i != pages.end()) {
         words_page words_page;
         sregex_iterator word_re_i(pages_i->begin(), pages_i->end(), word_re);
-        while(word_re_i != sregex_iterator()) {
+        
+    before_loop11:
+        if(word_re_i != sregex_iterator()) {
             string parsed_word = word_re_i->str();
             transform(parsed_word.begin(), parsed_word.end(), parsed_word.begin(), ::tolower);
             
             words_page.push_back(parsed_word);
             word_re_i++;
+            goto before_loop11;
         }
         book.push_back(words_page);
         words_page.clear();
